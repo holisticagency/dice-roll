@@ -1,7 +1,9 @@
 <?php
 
-/**
- * This file is part of DiceRoll.
+declare(strict_types=1);
+
+/*
+ * This file is part of holistic-agency/dice-roll.
  *
  * (c) JamesRezo <james@rezo.net>
  *
@@ -58,9 +60,9 @@ class Dice implements \Stringable
         if (!\preg_match(
             ',^(?<number>\d*)D(?<faces>\d*)(?<modifier>[+-]\d+)?$,i',
             $formula,
-            $matches
+            $matches,
         )) {
-            throw new \LogicException('Bad formula "'.$formula.'".');
+            throw new \LogicException('Bad formula "' . $formula . '".');
         }
 
         $this->number = !empty($matches['number']) ? (int) $matches['number'] : self::DEFAULT_NUMBER;
@@ -71,13 +73,13 @@ class Dice implements \Stringable
     public function roll(): int
     {
         $rolls = [];
-        for ($times=0; $times < $this->number; $times++) { 
+        for ($times = 0; $times < $this->number; $times++) {
             $rolls[] = $this->randomizer->random();
         }
         \sort($rolls, \SORT_NUMERIC);
 
         if (!\is_null($this->bestOfNumber)) {
-            $rolls = \array_slice($rolls,  -$this->bestOfNumber, $this->bestOfNumber);
+            $rolls = \array_slice($rolls, -$this->bestOfNumber, $this->bestOfNumber);
         }
         if (!\is_null($this->leastOfNumber)) {
             $rolls = \array_slice($rolls, 0, $this->leastOfNumber);
@@ -103,22 +105,22 @@ class Dice implements \Stringable
     public function bestOf(int $number): self
     {
         if ($number > $this->number || $number < 1) {
-            throw new \LogicException('Bad number "'.$number.'".');
+            throw new \LogicException('Bad number "' . $number . '".');
         }
 
         $dice = clone $this;
         $dice->bestOfNumber = $number;
         $dice->leastOfNumber = \null;
-        
+
         return $dice;
     }
-    
+
     public function leastOf(int $number = 1): self
     {
         if ($number > $this->number || $number < 1) {
-            throw new \LogicException('Bad number "'.$number.'".');
+            throw new \LogicException('Bad number "' . $number . '".');
         }
-        
+
         $dice = clone $this;
         $dice->bestOfNumber = \null;
         $dice->leastOfNumber = $number;
