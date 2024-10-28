@@ -1,0 +1,28 @@
+{
+    "name": "holistic-agency/dice-roll",
+    "description": "dice roll formula",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "JamesRezo",
+            "email": "james@rezo.net"
+        }
+    ],
+    "require": {
+        "holistic-agency/decouple": "dev-main"
+    },
+    "autoload": {
+        "psr-4": {
+            "HolisticAgency\\DiceRoll\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "HolisticAgency\\Test\\DiceRoll\\": "tests/"
+        }
+    },
+    "require-dev": {
+        "symfony/var-dumper": "^7.1"
+    }
+}
