@@ -21,7 +21,7 @@ use HolisticAgency\Decouple\RandomizerInterface;
  *
  * @author JamesRezo <james@rezo.net>
  */
-class Dice implements \Stringable
+class Dice implements DiceInterface
 {
     public const PLATONIC_SOLIDS = [4, 6, 8, 12, 20];
 
@@ -68,7 +68,6 @@ class Dice implements \Stringable
         $this->number = $this->setDefault('number', $matches);
         $this->faces = $this->setDefault('faces', $matches);
         $this->modifier = $this->setDefault('modifier', $matches);
-
     }
 
     /**
