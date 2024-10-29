@@ -40,6 +40,18 @@ class DiceTest extends TestCase
         $this->assertSame(2, $actual);
     }
 
+    public function testNegativeRoll()
+    {
+        // Given
+        $dice = new Dice('-1D6', $this->randomizer);
+
+        // When
+        $actual = $dice->roll();
+
+        // Then
+        $this->assertSame(-2, $actual);
+    }
+
     public function test0D()
     {
         // Given
@@ -99,7 +111,7 @@ class DiceTest extends TestCase
         $this->expectExceptionMessage('Bad start number "2" (must be 0 or 1 (default).');
 
         // When
-        new Dice('D', start:2);
+        new Dice('D', start: 2);
 
         // Then
         // An exception is thrown

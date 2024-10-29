@@ -37,9 +37,11 @@ class Dice implements DiceInterface
 
     private string $originalFormula;
 
-    private int $faces;
+    private int $sign;
 
     private int $number;
+
+    private int $faces;
 
     private int $modifier;
 
@@ -49,8 +51,8 @@ class Dice implements DiceInterface
 
     public function __construct(string $formula, ?RandomizerInterface $randomizer = null, int $start = 1)
     {
-        if (!\in_array($start, [0, 1])) {
-            throw new \LogicException('Bad start number "'.$start.'" (must be 0 or 1 (default).');
+        if (!\in_array($start, [0, 1], true)) {
+            throw new \LogicException('Bad start number "' . $start . '" (must be 0 or 1 (default).');
         }
 
         $this->parseFormula($formula);
@@ -62,13 +64,14 @@ class Dice implements DiceInterface
     {
         $matches = [];
         if (!\preg_match(
-            ',^(?<number>\d*)D(?<faces>\d*)(?<modifier>[+-]\d+)?$,i',
+            ',^(?<sign>[+-])?(?<number>\d*)D(?<faces>\d*)(?<modifier>[+-]\d+)?$,i',
             $formula,
             $matches,
         ) || $matches['number'] == 0) {
             throw new \LogicException('Bad formula "' . $formula . '".');
         }
 
+        $this->sign = $matches['sign'] == '-' ? -1 : 1;
         $this->number = $this->setDefault('number', $matches);
         $this->faces = $this->setDefault('faces', $matches);
         $this->modifier = $this->setDefault('modifier', $matches);
@@ -97,7 +100,7 @@ class Dice implements DiceInterface
             $rolls = \array_slice($rolls, 0, $this->leastOfNumber);
         }
 
-        return \array_sum($rolls) + $this->modifier;
+        return (\array_sum($rolls) + $this->modifier) * $this->sign;
     }
 
     public function __toString(): string
@@ -114,7 +117,7 @@ class Dice implements DiceInterface
         return $bestOrLeast . $this->originalFormula;
     }
 
-    private function xOff(int $number): self
+    private function xOf(int $number): self
     {
         if ($number > $this->number || $number < 1) {
             throw new \LogicException('Bad number "' . $number . '".');
@@ -125,7 +128,7 @@ class Dice implements DiceInterface
 
     public function bestOf(int $number): self
     {
-        $dice = $this->xOff($number);
+        $dice = $this->xOf($number);
 
         $dice->bestOfNumber = $number;
         $dice->leastOfNumber = \null;
@@ -135,7 +138,7 @@ class Dice implements DiceInterface
 
     public function leastOf(int $number = 1): self
     {
-        $dice = $this->xOff($number);
+        $dice = $this->xOf($number);
 
         $dice->bestOfNumber = \null;
         $dice->leastOfNumber = $number;
