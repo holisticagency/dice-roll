@@ -40,6 +40,18 @@ class DiceTest extends TestCase
         $this->assertSame(2, $actual);
     }
 
+    public function test0D()
+    {
+        // Given
+        $dice = new Dice('0D', $this->randomizer);
+
+        // When
+        $actual = $dice->roll();
+
+        // Then
+        $this->assertSame(2, $actual);
+    }
+
     public function testBadFormula()
     {
         // Given

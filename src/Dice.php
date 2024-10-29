@@ -27,11 +27,11 @@ class Dice implements \Stringable
 
     public const PENTAGONAL_TRAPEZOHEDRON = 10;
 
-    public const DEFAULT_NUMBER = 1;
-
-    public const DEFAULT_FACES = 6;
-
-    public const DEFAULT_MODIFIER = 0;
+    public const DEFAULTS = [
+        'number' => 1,
+        'faces' => 6,
+        'modifier' => 0,
+    ];
 
     private RandomizerInterface $randomizer;
 
@@ -65,9 +65,17 @@ class Dice implements \Stringable
             throw new \LogicException('Bad formula "' . $formula . '".');
         }
 
-        $this->number = !empty($matches['number']) ? (int) $matches['number'] : self::DEFAULT_NUMBER;
-        $this->faces = !empty($matches['faces']) ? (int) $matches['faces'] : self::DEFAULT_FACES;
-        $this->modifier = !empty($matches['modifier']) ? (int) $matches['modifier'] : self::DEFAULT_MODIFIER;
+        $this->number = $this->setDefault('number', $matches);
+        $this->faces = $this->setDefault('faces', $matches);
+        $this->modifier = $this->setDefault('modifier', $matches);
+    }
+
+    /**
+     * @param array{number?:string,faces?:string,modifier?:string} $matches
+     */
+    private function setDefault(string $part, array $matches): int
+    {
+        return !empty($matches[$part]) ? (int) $matches[$part] : self::DEFAULTS[$part];
     }
 
     public function roll(): int
@@ -102,13 +110,19 @@ class Dice implements \Stringable
         return $bestOrLeast . $this->originalFormula;
     }
 
-    public function bestOf(int $number): self
+    private function xOff(int $number): self
     {
         if ($number > $this->number || $number < 1) {
             throw new \LogicException('Bad number "' . $number . '".');
         }
 
-        $dice = clone $this;
+        return clone $this;
+    }
+
+    public function bestOf(int $number): self
+    {
+        $dice = $this->xOff($number);
+
         $dice->bestOfNumber = $number;
         $dice->leastOfNumber = \null;
 
@@ -117,11 +131,8 @@ class Dice implements \Stringable
 
     public function leastOf(int $number = 1): self
     {
-        if ($number > $this->number || $number < 1) {
-            throw new \LogicException('Bad number "' . $number . '".');
-        }
+        $dice = $this->xOff($number);
 
-        $dice = clone $this;
         $dice->bestOfNumber = \null;
         $dice->leastOfNumber = $number;
 
