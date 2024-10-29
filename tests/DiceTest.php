@@ -43,13 +43,14 @@ class DiceTest extends TestCase
     public function test0D()
     {
         // Given
-        $dice = new Dice('0D', $this->randomizer);
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage('Bad formula "0D".');
 
         // When
-        $actual = $dice->roll();
+        new Dice('0D');
 
         // Then
-        $this->assertSame(2, $actual);
+        // An exception is thrown
     }
 
     public function testBadFormula()

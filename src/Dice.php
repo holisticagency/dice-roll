@@ -61,13 +61,14 @@ class Dice implements \Stringable
             ',^(?<number>\d*)D(?<faces>\d*)(?<modifier>[+-]\d+)?$,i',
             $formula,
             $matches,
-        )) {
+        ) || $matches['number'] == 0) {
             throw new \LogicException('Bad formula "' . $formula . '".');
         }
 
         $this->number = $this->setDefault('number', $matches);
         $this->faces = $this->setDefault('faces', $matches);
         $this->modifier = $this->setDefault('modifier', $matches);
+
     }
 
     /**
