@@ -47,11 +47,15 @@ class Dice implements DiceInterface
 
     private ?int $leastOfNumber = \null;
 
-    public function __construct(string $formula, ?RandomizerInterface $randomizer = null)
+    public function __construct(string $formula, ?RandomizerInterface $randomizer = null, int $start = 1)
     {
+        if (!\in_array($start, [0, 1])) {
+            throw new \LogicException('Bad start number "'.$start.'" (must be 0 or 1 (default).');
+        }
+
         $this->parseFormula($formula);
         $this->originalFormula = $formula;
-        $this->randomizer = $randomizer ?? new Randomizer(1, $this->faces);
+        $this->randomizer = $randomizer ?? new Randomizer($start, $this->faces - (1 - $start));
     }
 
     private function parseFormula(string $formula): void

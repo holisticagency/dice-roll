@@ -92,6 +92,19 @@ class DiceTest extends TestCase
         $this->assertSame('1 least of 2D20', (string) $dice);
     }
 
+    public function testBadStartNumber()
+    {
+        // Given
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage('Bad start number "2" (must be 0 or 1 (default).');
+
+        // When
+        new Dice('D', start:2);
+
+        // Then
+        // An exception is thrown
+    }
+
     public function testBadBestNumber()
     {
         // Given
