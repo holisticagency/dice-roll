@@ -5,6 +5,7 @@
 ```php
 #!/usr/bin/env php
 <?php
+// bin/d666.php
 
 use HolisticAgency\Decouple\Frozen\Randomizer;
 use HolisticAgency\DiceRoll\Dice;
@@ -64,6 +65,7 @@ echo $fakeD666 . '(cheated):' . $fakeD666->roll() . PHP_EOL; // D666(cheated):66
 ```php
 #!/usr/bin/env php
 <?php
+// bin/d100.php
 
 use HolisticAgency\Decouple\Frozen\Randomizer;
 use HolisticAgency\DiceRoll\Dice;

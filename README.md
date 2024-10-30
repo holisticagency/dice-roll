@@ -1,10 +1,14 @@
 # holistic-agency/dice-roll
 
-dice roll formula
+One or More Dice to Roll.
+
+## Install
 
 ```bash
 composer require holistic-agency/dice-roll:^1.x-dev
 ```
+
+## Usage
 
 ```php
 use HolisticAgency\DiceRoll\Dice;
@@ -28,3 +32,5 @@ echo $potionOfHealing . ':' . $potionOfHealing->roll() . PHP_EOL;
 $sub1d4 = new Dice('-1D4+1');
 echo $sub1d4 . ':' . $sub1d4->roll() . PHP_EOL;
 ```
+
+[See other examples](docs/Examples.md)

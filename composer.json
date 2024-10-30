@@ -1,6 +1,6 @@
 {
     "name": "holistic-agency/dice-roll",
-    "description": "dice roll formula",
+    "description": "dice roll formula interpreter",
     "license": "MIT",
     "type": "library",
     "keywords": [
