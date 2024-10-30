@@ -13,15 +13,12 @@ declare(strict_types=1);
 
 namespace HolisticAgency\DiceRoll;
 
-use HolisticAgency\Decouple\Randomizer;
-use HolisticAgency\Decouple\RandomizerInterface;
-
 /**
  * One or More Dice to Roll.
  *
  * @author JamesRezo <james@rezo.net>
  */
-class Dice implements DiceInterface
+class Dice implements DiceInterface, NumberGeneratorAwareInterface
 {
     public const PLATONIC_SOLIDS = [4, 6, 8, 12, 20];
 
@@ -33,7 +30,7 @@ class Dice implements DiceInterface
         'modifier' => 0,
     ];
 
-    private RandomizerInterface $randomizer;
+    protected ?NumberGeneratorInterface $generator = \null;
 
     private string $originalFormula;
 
@@ -49,22 +46,27 @@ class Dice implements DiceInterface
 
     private ?int $leastOfNumber = \null;
 
-    public function __construct(string $formula, ?RandomizerInterface $randomizer = null, int $start = 1)
+    public function __construct(
+        string $formula,
+    ) {
+        $this->parseFormula($formula);
+        $this->originalFormula = $formula;
+    }
+
+    public function setNumberGenerator(NumberGeneratorInterface $generator, int $start = 1): void
     {
         if (!\in_array($start, [0, 1], true)) {
             throw new \LogicException('Bad start number "' . $start . '" (must be 0 or 1 (default).');
         }
 
-        $this->parseFormula($formula);
-        $this->originalFormula = $formula;
-        $this->randomizer = $randomizer ?? new Randomizer($start, $this->faces - (1 - $start));
+        $this->generator = $generator->from($start)->to($this->faces - (1 - $start));
     }
 
     private function parseFormula(string $formula): void
     {
         $matches = [];
         if (!\preg_match(
-            ',^(?<sign>[+-])?(?<number>\d*)D(?<faces>\d*)(?<modifier>[+-]\d+)?$,i',
+            ',^' . self::FORMULA_REGEX . '$,i',
             $formula,
             $matches,
         ) || $matches['number'] == 0) {
@@ -87,9 +89,13 @@ class Dice implements DiceInterface
 
     public function roll(): int
     {
+        if (\is_null($this->generator)) {
+            throw new \LogicException('A Number Generator must be set before a roll.');
+        }
+
         $rolls = [];
         for ($times = 0; $times < $this->number; $times++) {
-            $rolls[] = $this->randomizer->random();
+            $rolls[] = $this->generator->drawNumber();
         }
         \sort($rolls, \SORT_NUMERIC);
 

@@ -13,25 +13,27 @@ declare(strict_types=1);
 
 namespace HolisticAgency\Test\DiceRoll;
 
-use HolisticAgency\Decouple\Frozen\Randomizer;
 use HolisticAgency\DiceRoll\Dice;
+use HolisticAgency\DiceRoll\NumberGeneratorInterface;
+use HolisticAgency\Test\DiceRoll\Stub\GeneratorStub;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 
 #[CoversClass(Dice::class)]
 class DiceTest extends TestCase
 {
-    private Randomizer $randomizer;
+    private NumberGeneratorInterface $generator;
 
     protected function setUp(): void
     {
-        $this->randomizer = new Randomizer(2);
+        $this->generator = new GeneratorStub();
     }
 
     public function testRoll()
     {
         // Given
-        $dice = new Dice('2D6-2', $this->randomizer);
+        $dice = new Dice('2D6-2');
+        $dice->setNumberGenerator($this->generator);
 
         // When
         $actual = $dice->roll(); // 2+2-2
@@ -43,7 +45,8 @@ class DiceTest extends TestCase
     public function testNegativeRoll()
     {
         // Given
-        $dice = new Dice('-1D6', $this->randomizer);
+        $dice = new Dice('-1D6');
+        $dice->setNumberGenerator($this->generator);
 
         // When
         $actual = $dice->roll();
@@ -81,7 +84,8 @@ class DiceTest extends TestCase
     public function testBestOfRoll()
     {
         // Given
-        $dice = (new Dice('4D6', $this->randomizer))->bestOf(3);
+        $dice = (new Dice('4D6'))->bestOf(3);
+        $dice->setNumberGenerator($this->generator);
 
         // When
         $actual = $dice->roll();
@@ -94,7 +98,8 @@ class DiceTest extends TestCase
     public function testLeastOfRoll()
     {
         // Given
-        $dice = (new Dice('2D20', $this->randomizer))->leastOf(1);
+        $dice = (new Dice('2D20'))->leastOf(1);
+        $dice->setNumberGenerator($this->generator);
 
         // When
         $actual = $dice->roll();
@@ -111,7 +116,8 @@ class DiceTest extends TestCase
         $this->expectExceptionMessage('Bad start number "2" (must be 0 or 1 (default).');
 
         // When
-        new Dice('D', start: 2);
+        (new Dice('D'))->setNumberGenerator($this->generator, 2);
+
 
         // Then
         // An exception is thrown
@@ -138,6 +144,19 @@ class DiceTest extends TestCase
 
         // When
         (new Dice('D'))->leastOf(2);
+
+        // Then
+        // An exception is thrown
+    }
+
+    public function testMissingNumberGenerator()
+    {
+        // Given
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage('A Number Generator must be set before a roll.');
+
+        // When
+        (new Dice('D'))->roll();
 
         // Then
         // An exception is thrown

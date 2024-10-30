@@ -13,9 +13,7 @@ declare(strict_types=1);
 
 namespace HolisticAgency\DiceRoll;
 
-interface DiceInterface extends \Stringable
+interface NumberGeneratorAwareInterface
 {
-    public const FORMULA_REGEX = '(?<sign>[+-])?(?<number>\d*)D(?<faces>\d*)(?<modifier>[+-]\d+)?';
-
-    public function roll(): int;
+    public function setNumberGenerator(NumberGeneratorInterface $generator, int $start = 1): void;
 }

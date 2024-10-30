@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /*
  * This file is part of holistic-agency/dice-roll.
  *
@@ -13,9 +11,11 @@ declare(strict_types=1);
 
 namespace HolisticAgency\DiceRoll;
 
-interface DiceInterface extends \Stringable
+interface NumberGeneratorInterface
 {
-    public const FORMULA_REGEX = '(?<sign>[+-])?(?<number>\d*)D(?<faces>\d*)(?<modifier>[+-]\d+)?';
+    public function from(int $min): self;
 
-    public function roll(): int;
+    public function to(int $max): self;
+
+    public function drawNumber(): int;
 }
