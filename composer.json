@@ -14,7 +14,7 @@
         }
     ],
     "require": {
-        "holistic-agency/decouple": "dev-main"
+        "holistic-agency/decouple": "^1.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^10.5",
