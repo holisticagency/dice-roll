@@ -11,20 +11,7 @@ composer require holistic-agency/dice-roll:^1.x-dev
 ## Usage
 
 ```php
-<?php
-
-use HolisticAgency\DiceRoll\DiceFactory;
-
-$doubleRoll = DiceFactory::fromFormula('2D20');
-
-$advantage = $doubleRoll->bestOf(1);
-$disadvantage = $doubleRoll->leastOf(1);
-
-echo $advantage . ':' . $advantage->roll() . PHP_EOL;
-echo $disadvantage . ':' . $disadvantage->roll() . PHP_EOL;
-```
-
-```php
+#!/usr/bin/env php
 <?php
 
 use HolisticAgency\DiceRoll\DiceFactory;
@@ -35,6 +22,9 @@ echo $sub1d4 . ':' . $sub1d4->roll() . PHP_EOL; // Between -5 and -1, not -3 to 
 ```
 
 ```php
+#!/usr/bin/env php
+<?php
+
 use HolisticAgency\DiceRoll\DiceFactory;
 
 $potionOfHealing = DiceFactory::fromFormula('2D4+2');
@@ -45,6 +35,7 @@ echo $sneakAttack . ':' . $sneakAttack->roll() . PHP_EOL;
 ```
 
 ```php
+#!/usr/bin/env php
 <?php
 
 use HolisticAgency\DiceRoll\Dice;

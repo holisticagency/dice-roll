@@ -93,3 +93,21 @@ $d100 = new D100();
 
 echo $d100 . ':' . $d100->roll() . PHP_EOL; // D100:...
 ```
+
+```php
+#!/usr/bin/env php
+<?php
+// bin/advantage-disadvantage.php
+
+use HolisticAgency\DiceRoll\Dice;
+use HolisticAgency\DiceRoll\MersenneTwister;
+
+$doubleRoll = new Dice('2D20');
+$doubleRoll->setNumberGenerator(new MersenneTwister());
+
+$advantage = $doubleRoll->bestOf(1);
+$disadvantage = $doubleRoll->leastOf(1);
+
+echo $advantage . ':' . $advantage->roll() . PHP_EOL;
+echo $disadvantage . ':' . $disadvantage->roll() . PHP_EOL;
+```
